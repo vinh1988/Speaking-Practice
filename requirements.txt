@@ -11,3 +11,7 @@ requests
 pydantic
 python-dotenv
 # Piper is usually a binary, but we can use piper-tts if available or call via subprocess
+audio-recorder-streamlit
+streamlit-webrtc
+aiortc
+soundfile

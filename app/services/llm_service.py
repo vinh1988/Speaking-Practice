@@ -1,9 +1,13 @@
 import requests
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 def query_phi3(prompt: str):
+    logger.info(f"Querying Phi-3 with prompt: {prompt[:100]}...")
     payload = {
         "model": "phi3",
         "prompt": prompt,
@@ -11,10 +15,13 @@ def query_phi3(prompt: str):
     }
     
     try:
-        response = requests.post(OLLAMA_URL, json=payload)
+        response = requests.post(OLLAMA_URL, json=payload, timeout=300)
         response.raise_for_status()
-        return response.json().get("response", "")
+        result = response.json().get("response", "")
+        logger.info(f"Received response from Phi-3: {result[:100]}...")
+        return result
     except Exception as e:
+        logger.error(f"Error connecting to Ollama: {str(e)}")
         return f"Error connecting to Ollama: {str(e)}"
 
 def generate_question(topic: str, context: str, image_description: str = None):
