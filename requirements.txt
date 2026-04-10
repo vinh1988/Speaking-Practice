@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+streamlit
+faster-whisper
+transformers
+torch
+pillow
+sqlalchemy
+python-multipart
+requests
+pydantic
+python-dotenv
+# Piper is usually a binary, but we can use piper-tts if available or call via subprocess
