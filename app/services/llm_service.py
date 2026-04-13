@@ -15,7 +15,7 @@ def query_phi3(prompt: str):
     }
     
     try:
-        response = requests.post(OLLAMA_URL, json=payload, timeout=300)
+        response = requests.post(OLLAMA_URL, json=payload, timeout=600)
         response.raise_for_status()
         result = response.json().get("response", "")
         logger.info(f"Received response from Phi-3: {result[:100]}...")
@@ -35,20 +35,24 @@ def generate_question(topic: str, context: str, image_description: str = None):
 
 def evaluate_answer(question: str, user_answer: str):
     prompt = f"""
-    You are an IELTS examiner. 
+    You are an expert IELTS examiner. 
     Question: {question}
     User Answer: {user_answer}
     
-    Evaluate the answer based on:
-    1. Grammar (1-9)
-    2. Fluency (1-9)
-    3. Vocabulary (1-9)
-    
-    Provide scores and a brief feedback with corrections. 
-    Format:
+    Tasks:
+    1. Evaluate the answer for Grammar, Fluency, and Vocabulary (Scores 1-9).
+    2. Provide detailed feedback on strengths and weaknesses.
+    3. PROPOSE A STANDARD HIGH-SCORING SAMPLE ANSWER (Band 8 or 9) that captures the user's original intent but uses much better vocabulary, varied grammatical structures, and vivid descriptions to guide the student.
+
+    Format your response EXACTLY like this:
     Grammar: [score]
     Fluency: [score]
     Vocabulary: [score]
-    Feedback: [text]
+    
+    Feedback: [Your analysis]
+    
+    ---
+    ### 🌟 Improved Sample Answer (Band 8-9):
+    [Provide the high-quality sample version of the user's answer here]
     """
     return query_phi3(prompt)
