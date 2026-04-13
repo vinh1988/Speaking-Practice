@@ -10,7 +10,7 @@ python-multipart
 requests
 pydantic
 python-dotenv
-# Piper is usually a binary, but we can use piper-tts if available or call via subprocess
+piper-tts
 audio-recorder-streamlit
 streamlit-webrtc
 aiortc

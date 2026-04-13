@@ -34,16 +34,28 @@ if [ ! -f "models/piper/en_US-lessac-medium.onnx" ]; then
     curl -L https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/lessac/medium/en_US-lessac-medium.onnx.json -o models/piper/en_US-lessac-medium.onnx.json
 fi
 
-# 4. Handle Process Cleanup
+# 4. Check for Ollama and Phi-3 model
+if command -v ollama &> /dev/null; then
+    if ! ollama list | grep -q "phi3"; then
+        echo "🦙 Pulling Phi-3 model for Ollama (this may take a while)..."
+        ollama pull phi3
+    else
+        echo "✅ Phi-3 model found in Ollama."
+    fi
+else
+    echo "⚠️ Warning: Ollama not found. Please install it from https://ollama.com"
+fi
+
+# 5. Handle Process Cleanup
 echo "🧹 Cleaning up old processes..."
 pkill -f uvicorn
 pkill -f streamlit
 
-# 5. Run Backend
+# 6. Run Backend
 echo "⚙️ Starting FastAPI Backend on port 8080..."
 ./venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8080 &
 
-# 6. Run Frontend
+# 7. Run Frontend
 echo "🌐 Starting Streamlit Frontend on port 8501..."
 echo "---"
 echo "The terminal will show Streamlit logs. Press CTRL+C to stop both services."
