@@ -24,35 +24,47 @@ def query_phi3(prompt: str):
         logger.error(f"Error connecting to Ollama: {str(e)}")
         return f"Error connecting to Ollama: {str(e)}"
 
-def generate_question(topic: str, context: str, image_description: str = None):
-    prompt = f"You are an IELTS speaking coach. The topic is '{topic}' and the context is '{context}'."
+def generate_question(topic: str, context: str, skill_type: str = "Speaking", sub_index: str = None, image_description: str = None):
+    prompt = f"You are an IELTS {skill_type} examiner. The topic is '{topic}' and the context is '{context}'."
+    if sub_index:
+        prompt += f" This is for {sub_index}."
     if image_description:
         prompt += f" The user uploaded an image described as: '{image_description}'."
     
-    prompt += "\nGenerate one natural IELTS-style speaking question for the user."
+    if skill_type == "Speaking":
+        prompt += "\nGenerate one natural IELTS-style speaking question for the user."
+    elif skill_type == "Writing":
+        prompt += f"\nGenerate an IELTS Writing {sub_index if sub_index else 'Task'} prompt for the user."
+    elif skill_type == "Reading":
+        prompt += f"\nGenerate a short IELTS-style Reading passage and one multiple choice question based on it."
+    elif skill_type == "Listening":
+        prompt += f"\nGenerate a short dialogue transcript and one question about what was said."
     
     return query_phi3(prompt)
 
-def evaluate_answer(question: str, user_answer: str):
+def evaluate_answer(question: str, user_answer: str, skill_type: str = "Speaking"):
     prompt = f"""
-    You are an expert IELTS examiner. 
+    SYSTEM: You are a MINIMALIST IELTS examiner. Your goal is to be EXTREMELY BRIEF and concise.
+    
     Question: {question}
     User Answer: {user_answer}
     
-    Tasks:
-    1. Evaluate the answer for Grammar, Fluency, and Vocabulary (Scores 1-9).
-    2. Provide detailed feedback on strengths and weaknesses.
-    3. PROPOSE A STANDARD HIGH-SCORING SAMPLE ANSWER (Band 8 or 9) that captures the user's original intent but uses much better vocabulary, varied grammatical structures, and vivid descriptions to guide the student.
-
-    Format your response EXACTLY like this:
-    Grammar: [score]
-    Fluency: [score]
-    Vocabulary: [score]
+    INSTRUCTIONS:
+    1. Provide a ONE-SENTENCE metaphor.
+    2. Provide 3 SHORT bullet points for Core Ideas.
+    3. Provide ONE SINGLE PARAGRAPH sample answer.
+    4. CRITICAL: The sample answer MUST BE UNDER 80 WORDS. IF YOU WRITE MORE, YOU FAIL.
     
-    Feedback: [Your analysis]
+    FORMAT:
+    ### 🌈 Metaphor
+    [One sentence]
     
-    ---
-    ### 🌟 Improved Sample Answer (Band 8-9):
-    [Provide the high-quality sample version of the user's answer here]
+    ### 💡 Core Ideas
+    * [Idea 1]
+    * [Idea 2]
+    * [Idea 3]
+    
+    ### 🌟 Concise Sample (Band 9)
+    [Exactly 50-80 words. One paragraph only.]
     """
     return query_phi3(prompt)

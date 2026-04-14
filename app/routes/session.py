@@ -11,13 +11,17 @@ class SessionCreate(BaseModel):
     topic: str
     context: str
     level: Optional[str] = "Intermediate"
+    skill_type: Optional[str] = "Speaking"
+    sub_index: Optional[str] = None
 
 @router.post("/")
 def create_session(session_data: SessionCreate, db: Session = Depends(get_db)):
     db_session = SessionModel(
         topic=session_data.topic,
         context=session_data.context,
-        level=session_data.level
+        level=session_data.level,
+        skill_type=session_data.skill_type,
+        sub_index=session_data.sub_index
     )
     db.add(db_session)
     db.commit()
