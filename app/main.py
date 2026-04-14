@@ -8,6 +8,7 @@ from app.routes import image as image_router
 from app.routes import question as question_router
 from app.routes import evaluation as evaluation_router
 from app.routes import history as history_router
+from app.routes import prep as prep_router
 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -42,6 +43,7 @@ app.include_router(image_router.router, prefix="/image", tags=["Image"])
 app.include_router(question_router.router, prefix="/question", tags=["Question"])
 app.include_router(evaluation_router.router, prefix="/evaluate", tags=["Evaluation"])
 app.include_router(history_router.router, prefix="/history", tags=["History"])
+app.include_router(prep_router.router, prefix="/prep", tags=["Preparation"])
 
 @app.get("/")
 async def root():

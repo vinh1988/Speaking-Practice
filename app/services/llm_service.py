@@ -67,3 +67,18 @@ def evaluate_answer(question: str, user_answer: str, skill_type: str = "Speaking
     * **[Term]**: [Brief explanation]
     """
     return query_phi3(prompt)
+def generate_prep_sheet(topic: str, skill_type: str = "Speaking"):
+    prompt = f"""
+    You are an IELTS tutor. Create a high-quality Preparation Sheet for the topic: '{topic}' and skill: '{skill_type}'.
+    
+    The goal is to help a student get familiar with the topic and boost their fluency before they start a practice session.
+    
+    Structure your response carefully:
+    1. 🏷️ TOP-TIER VOCABULARY: 5 advanced words/collocations with meanings and IPA (for speaking).
+    2. 🏗️ USEFUL STRUCTURES: 3 complex grammatical structures or sentence starters relevant to the topic.
+    3. 📝 SCENARIO-BASED EXAMPLES: Provide 2 short example paragraphs applying the above vocabulary and structures.
+    4. 💡 EXPERT TIPS: One critical tip for this specific skill and topic.
+    
+    Format using Markdown and clear headers.
+    """
+    return query_phi3(prompt)

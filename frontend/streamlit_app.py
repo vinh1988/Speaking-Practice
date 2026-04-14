@@ -64,7 +64,7 @@ with st.sidebar:
             st.error("Failed to start session.")
 
 # Tabs
-tab_practice, tab_history = st.tabs(["🚀 Practice", "📊 Your History"])
+tab_practice, tab_prep, tab_history = st.tabs(["🚀 Practice", "📚 Knowledge Bank", "📊 Your History"])
 
 with tab_practice:
     if st.session_state.session_id:
@@ -144,6 +144,28 @@ with tab_practice:
                 st.info("Your response and feedback will appear here.")
     else:
         st.info("Please start a session in the sidebar to begin.")
+
+with tab_prep:
+    st.header("🎯 Preparation & Fluency Booster")
+    st.write("Get familiar with common topics before you start practicing.")
+    
+    col_p1, col_p2 = st.columns([1, 2])
+    with col_p1:
+        prep_topic = st.text_input("Prep Topic", topic, key="prep_topic")
+        prep_skill = st.selectbox("Prep Skill", ["Speaking", "Writing", "Listening", "Reading"], key="prep_skill")
+        if st.button("Generate Prep Sheet"):
+            with st.spinner("Compiling knowledge bank..."):
+                resp = requests.get(f"{API_URL}/prep/generate", params={"topic": prep_topic, "skill_type": prep_skill})
+                if resp.status_code == 200:
+                    st.session_state.prep_content = resp.json()["content"]
+                else:
+                    st.error("Failed to generate prep sheet.")
+    
+    with col_p2:
+        if "prep_content" in st.session_state:
+            st.markdown(st.session_state.prep_content)
+        else:
+            st.info("Select a topic and skill to generate a language bank.")
 
 with tab_history:
     st.header("Practice History")
