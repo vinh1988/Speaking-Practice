@@ -44,27 +44,26 @@ def generate_question(topic: str, context: str, skill_type: str = "Speaking", su
 
 def evaluate_answer(question: str, user_answer: str, skill_type: str = "Speaking"):
     prompt = f"""
-    SYSTEM: You are a MINIMALIST IELTS examiner. Your goal is to be EXTREMELY BRIEF and concise.
+    You are an expert IELTS examiner. Analyze the student's response and provide constructive feedback to help them expand their imagination and vocabulary using the 5W1H framework.
     
     Question: {question}
     User Answer: {user_answer}
     
     INSTRUCTIONS:
-    1. Provide a ONE-SENTENCE metaphor.
-    2. Provide 3 SHORT bullet points for Core Ideas.
-    3. Provide ONE SINGLE PARAGRAPH sample answer.
-    4. CRITICAL: The sample answer MUST BE UNDER 80 WORDS. IF YOU WRITE MORE, YOU FAIL.
-    
+    1. 🧠 Expansion Strategy (5W1H): Suggest specific details the student could add involving Who, What, When, Where, Why, and How to make their story more vivid.
+    2. 🌟 Model Answer (Band 7): Provide a natural, clear response targeting IELTS Band 7. It should be realistic, using good grammar and vocabulary without being overly complex. Aim for 80-120 words.
+    3. 💎 Vocabulary Boost: Identify 3-5 useful collocations or phrases from your model answer.
+
     FORMAT:
-    ### 🌈 Metaphor
-    [One sentence]
+    ### 🧠 Expansion Strategy (5W1H)
+    * **Who & What**: [Guidance]
+    * **When & Where**: [Guidance]
+    * **Why & How**: [Guidance on emotions and process]
     
-    ### 💡 Core Ideas
-    * [Idea 1]
-    * [Idea 2]
-    * [Idea 3]
+    ### 🌟 Model Band 7 Answer
+    [Write the model answer here]
     
-    ### 🌟 Concise Sample (Band 9)
-    [Exactly 50-80 words. One paragraph only.]
+    ### 💎 Vocabulary Boost
+    * **[Term]**: [Brief explanation]
     """
     return query_phi3(prompt)
