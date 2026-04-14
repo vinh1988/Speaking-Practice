@@ -17,7 +17,7 @@ def get_new_question(session_id: int, image_description: str = None, db: Session
     if not db_session:
         return {"error": "Session not found"}
     
-    question = generate_question(db_session.topic, db_session.context, image_description)
+    question = generate_question(db_session.topic, db_session.context, db_session.skill_type, db_session.sub_index, image_description)
     
     # Generate TTS
     audio_file, error = text_to_speech(question)

@@ -10,4 +10,6 @@ class Session(Base):
     context = Column(String)
     image_path = Column(String, nullable=True)
     level = Column(String, default="Intermediate")
+    skill_type = Column(String, default="Speaking") # Speaking, Writing, Listening, Reading
+    sub_index = Column(String, nullable=True) # Part 1, Task 1, Section 1, etc.
     created_at = Column(DateTime, default=datetime.datetime.utcnow)

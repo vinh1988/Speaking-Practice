@@ -1,0 +1,7 @@
+sqlite3 speaking_coach.db "ALTER TABLE sessions ADD COLUMN skill_type VARCHAR;
+ALTER TABLE sessions ADD COLUMN sub_index VARCHAR;
+ALTER TABLE speaking_logs ADD COLUMN task_response_score FLOAT;
+ALTER TABLE speaking_logs ADD COLUMN cohesion_score FLOAT;
+ALTER TABLE speaking_logs ADD COLUMN total_correct INTEGER;
+ALTER TABLE speaking_logs ADD COLUMN total_questions INTEGER;
+ALTER TABLE speaking_logs ADD COLUMN band_score FLOAT;"
