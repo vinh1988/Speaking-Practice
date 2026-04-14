@@ -13,7 +13,16 @@ import uuid
 async def transcribe(session_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
     # Save file permanently in outputs for history
     file_id = str(uuid.uuid4())[:8]
-    output_filename = f"user_ans_{session_id}_{file_id}.wav"
+    # Determine extension based on content type
+    ext = ".wav"
+    if "webm" in file.content_type:
+        ext = ".webm"
+    elif "ogg" in file.content_type:
+        ext = ".ogg"
+    elif "mpeg" in file.content_type:
+        ext = ".mp3"
+        
+    output_filename = f"user_ans_{session_id}_{file_id}{ext}"
     output_path = os.path.join("outputs", output_filename)
     
     with open(output_path, "wb") as buffer:

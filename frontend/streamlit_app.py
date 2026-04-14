@@ -100,7 +100,8 @@ with tab_practice:
 
                 if audio_result:
                     audio_bytes = audio_result['bytes']
-                    st.audio(audio_bytes, format="audio/wav")
+                    # Most recorders return WebM or WAV
+                    st.audio(audio_bytes) 
                     if st.button("Transcribe Answer"):
                         with st.spinner("Transcribing..."):
                             with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
@@ -185,7 +186,11 @@ with tab_history:
                                             st.audio(f"{API_URL}{item['question_audio_url']}", format="audio/wav")
                                         st.write(f"**Your Answer:** {item['answer']}")
                                         if item.get('user_audio_url'):
-                                            st.audio(f"{API_URL}{item['user_audio_url']}", format="audio/wav")
+                                            # Determine format from extension
+                                            user_fmt = "audio/wav"
+                                            if item['user_audio_url'].endswith(".webm"):
+                                                user_fmt = "audio/webm"
+                                            st.audio(f"{API_URL}{item['user_audio_url']}", format=user_fmt)
                                         
                                         # Show scores if any
                                         scores = item.get("scores", {})
