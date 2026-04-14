@@ -40,6 +40,16 @@ def generate_question(topic: str, context: str, skill_type: str = "Speaking", su
     elif skill_type == "Listening":
         prompt += f"\nGenerate a short dialogue transcript and one question about what was said."
     
+    prompt += """
+    
+    IMPORTANT: Format your response EXACTLY as follows:
+    ### QUESTION
+    [The question or prompt here]
+    
+    ### TIPS (5W1H Planning)
+    [Provide 4-5 bullet points suggesting what to talk about using Who, What, Where, When, Why, and How to help the student plan their answer.]
+    """
+    
     return query_phi3(prompt)
 
 def evaluate_answer(question: str, user_answer: str, skill_type: str = "Speaking"):

@@ -17,14 +17,24 @@ def get_new_question(session_id: int, image_description: str = None, db: Session
     if not db_session:
         return {"error": "Session not found"}
     
-    question = generate_question(db_session.topic, db_session.context, db_session.skill_type, db_session.sub_index, image_description)
+    raw_response = generate_question(db_session.topic, db_session.context, db_session.skill_type, db_session.sub_index, image_description)
     
-    # Generate TTS
+    # Parse the response
+    question = raw_response
+    tips = ""
+    
+    if "### QUESTION" in raw_response and "### TIPS" in raw_response:
+        parts = raw_response.split("### TIPS")
+        tips = parts[1].strip()
+        question = parts[0].replace("### QUESTION", "").strip()
+    
+    # Generate TTS only for the question text
     audio_file, error = text_to_speech(question)
     audio_url = f"/outputs/{audio_file}" if audio_file else None
     
     return {
         "question": question,
+        "tips": tips,
         "audio_url": audio_url,
         "tts_error": error
     }
