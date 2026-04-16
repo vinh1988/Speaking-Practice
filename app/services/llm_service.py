@@ -25,20 +25,34 @@ def query_phi3(prompt: str):
         return f"Error connecting to Ollama: {str(e)}"
 
 def generate_question(topic: str, context: str, skill_type: str = "Speaking", sub_index: str = None, image_description: str = None):
-    prompt = f"You are an IELTS {skill_type} examiner. The topic is '{topic}' and the context is '{context}'."
-    if sub_index:
-        prompt += f" This is for {sub_index}."
-    if image_description:
-        prompt += f" The user uploaded an image described as: '{image_description}'."
+    prompt = f"""
+    You are an IELTS {skill_type} examiner. The topic is '{topic}' and the context is '{context}'.
+    {'This is for ' + sub_index if sub_index else ''}
+    {'The user uploaded an image described as: ' + image_description if image_description else ''}
     
-    if skill_type == "Speaking":
-        prompt += "\nGenerate one natural IELTS-style speaking question for the user."
-    elif skill_type == "Writing":
-        prompt += f"\nGenerate an IELTS Writing {sub_index if sub_index else 'Task'} prompt for the user."
-    elif skill_type == "Reading":
-        prompt += f"\nGenerate a short IELTS-style Reading passage and one multiple choice question based on it."
-    elif skill_type == "Listening":
-        prompt += f"\nGenerate a short dialogue transcript and one question about what was said."
+    TASK:
+    1. Generate a natural IELTS-style {skill_type} question.
+    2. Provide a "Knowledge Bank" (Preparation guide) in BOTH English and Vietnamese.
+    
+    FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
+    
+    ### QUESTION
+    [The question text here]
+
+    ### KNOWLEDGE BANK (Preparation)
+    #### 🏷️ Vocabulary & Idioms (Từ vựng & Thành ngữ)
+    * **English Term** (IPA) - Vietnamese Meanings
+    * ... (Provide 3 key terms)
+
+    #### 🏗️ Useful Phrases (Cấu trúc hữu ích)
+    * **Phrase** - Vietnamese Context/Meaning
+    * ... (Provide 2 phrases)
+
+    #### 💡 5W1H Planning (Gợi ý ý tưởng)
+    * **Who/What**: [English advice] - [Vietnamese advice]
+    * **Where/When**: [English advice] - [Vietnamese advice]
+    * **Why/How**: [English advice] - [Vietnamese advice]
+    """
     
     return query_phi3(prompt)
 
@@ -69,16 +83,16 @@ def evaluate_answer(question: str, user_answer: str, skill_type: str = "Speaking
     return query_phi3(prompt)
 def generate_prep_sheet(topic: str, skill_type: str = "Speaking"):
     prompt = f"""
-    You are an IELTS tutor. Create a high-quality Preparation Sheet for the topic: '{topic}' and skill: '{skill_type}'.
+    You are an IELTS tutor. Create a high-quality BILINGUAL (English and Vietnamese) Preparation Sheet for:
+    Topic: '{topic}'
+    Skill: '{skill_type}'
     
-    The goal is to help a student get familiar with the topic and boost their fluency before they start a practice session.
+    Structure:
+    1. 🏷️ TOP-TIER VOCABULARY: 5 advanced words/collocations with Vietnamese meanings and IPA.
+    2. 🏗️ USEFUL STRUCTURES: 3 complex models with Vietnamese translations/explanations.
+    3. 📝 SCENARIO-BASED EXAMPLES: 2 short paragraphs in English with brief Vietnamese summaries.
+    4. 💡 5W1H ADVICE: Planning tips in both languages.
     
-    Structure your response carefully:
-    1. 🏷️ TOP-TIER VOCABULARY: 5 advanced words/collocations with meanings and IPA (for speaking).
-    2. 🏗️ USEFUL STRUCTURES: 3 complex grammatical structures or sentence starters relevant to the topic.
-    3. 📝 SCENARIO-BASED EXAMPLES: Provide 2 short example paragraphs applying the above vocabulary and structures.
-    4. 💡 EXPERT TIPS: One critical tip for this specific skill and topic.
-    
-    Format using Markdown and clear headers.
+    Format using Markdown.
     """
     return query_phi3(prompt)

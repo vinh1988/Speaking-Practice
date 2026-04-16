@@ -21,6 +21,8 @@ if "session_id" not in st.session_state:
     st.session_state.session_id = None
 if "current_question" not in st.session_state:
     st.session_state.current_question = None
+if "current_prep_data" not in st.session_state:
+    st.session_state.current_prep_data = ""
 if "current_audio_url" not in st.session_state:
     st.session_state.current_audio_url = None
 if "current_user_audio_url" not in st.session_state:
@@ -78,12 +80,18 @@ with tab_practice:
                     if resp.status_code == 200:
                         data = resp.json()
                         st.session_state.current_question = data["question"]
+                        st.session_state.current_prep_data = data.get("prep_data", "")
                         st.session_state.current_audio_url = data["audio_url"]
                         st.session_state.transcription = "" 
                         st.session_state.feedback = ""
             
             if st.session_state.current_question:
                 st.info(st.session_state.current_question)
+                
+                if st.session_state.current_prep_data:
+                    with st.expander("📚 Knowledge Bank (Bilingual Prep Guide)"):
+                        st.markdown(st.session_state.current_prep_data)
+
                 if st.session_state.current_audio_url:
                     st.write("🔊 **Listen to Question:**")
                     st.audio(f"{API_URL}{st.session_state.current_audio_url}", format="audio/wav")
