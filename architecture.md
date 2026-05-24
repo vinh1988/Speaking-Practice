@@ -59,13 +59,13 @@ graph TD
         B4[Adaptive Feedback Loop]
     end
 
-    %% AI Models (CPU Only)
-    subgraph Models [Local AI Models - CPU]
-        M1["BLIP (Vision-to-Text)"]
-        M2["Faster-Whisper (STT)"]
-        M3["Phi-3 Mini (LLM)"]
-        M4["Piper (TTS)"]
-        M5["BGE-small (Embeddings)"]
+    %% AI Models (Cloud APIs)
+    subgraph Models [Cloud AI Models]
+        M1["Gemini 1.5 Flash (Vision)"]
+        M2["Groq Whisper (STT)"]
+        M3["Gemini 1.5 Flash / Groq (LLM)"]
+        M4["Edge-TTS (Cloud TTS)"]
+        M5["BGE-small (Local Embeddings - Lightweight)"]
     end
 
     %% Storage
